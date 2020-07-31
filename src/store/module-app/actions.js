@@ -15,17 +15,18 @@ export const fetchRestaurantsList = ({ commit, state }, payload = {
   descending: false,
   page: 1,
   rowsPerPage: 10,
+  pageSize: 10,
 }) => {
   const params = {
     cityId: state.currentCityId,
     sortBy: payload.sortBy,
     descending: payload.descending,
     page: payload.page - 1,
-    size: payload.rowsPerPage,
+    pageSize: payload.rowsPerPage,
     filter: payload.filter,
   };
   commit('SET_LOADING_STATE_FETCHING_RESTAURANTS_LIST', true);
-  axiosInstance.post('get-restaurants-list', params)
+  axiosInstance.post('filter-restaurants', params)
     .then((response) => {
       const { data } = response;
       commit('SET_RESTAURANTS_LIST', data.rows);
@@ -61,7 +62,7 @@ export const fetchCitiesList = ({ commit }) => {
 
 export const deleteRestaurant = ({ commit, dispatch }, id) => {
   commit('SET_LOADING_STATE_DELETING_RESTAURANT', true);
-  axiosInstance.get(`remove-restaurant?restaurantId=${id}`)
+  axiosInstance.delete(`remove-restaurant/${id}`)
     .then(() => {
       successHandler();
       dispatch('fetchRestaurantsList');
@@ -72,7 +73,7 @@ export const deleteRestaurant = ({ commit, dispatch }, id) => {
 
 export const editRestaurant = ({ commit }, payload) => {
   commit('SET_LOADING_STATE_EDITING_RESTAURANT', true);
-  return axiosInstance.get(`edit-restaurant?restaurantId=${payload.id}&newRestaurantName=${payload.name}`)
+  return axiosInstance.post(`edit-restaurant/${payload.id}`, { name: payload.name })
     .then(() => {
       successHandler();
       commit('SET_LOADING_STATE_EDITING_RESTAURANT', false);
@@ -82,7 +83,7 @@ export const editRestaurant = ({ commit }, payload) => {
 
 export const deleteCity = ({ commit, dispatch }, id) => {
   commit('SET_LOADING_STATE_DELETING_CITY', true);
-  axiosInstance.get(`remove-city?cityId=${id}`)
+  axiosInstance.delete(`remove-city/${id}`)
     .then(() => {
       successHandler();
       dispatch('fetchCitiesList');
@@ -93,7 +94,7 @@ export const deleteCity = ({ commit, dispatch }, id) => {
 
 export const editCity = ({ commit, dispatch }, payload) => {
   commit('SET_LOADING_STATE_EDITING_CITY', true);
-  axiosInstance.get(`edit-city?cityId=${payload.id}&newCityName=${payload.name}`)
+  axiosInstance.post(`edit-city/${payload.id}`, { name: payload.name })
     .then(() => {
       successHandler();
       dispatch('fetchCitiesList');
@@ -104,7 +105,7 @@ export const editCity = ({ commit, dispatch }, payload) => {
 
 export const addCity = ({ commit, dispatch }, name) => {
   commit('SET_LOADING_STATE_ADDING_CITY', true);
-  axiosInstance.get(`add-city?cityName=${name}`)
+  axiosInstance.post('add-city', { name })
     .then(() => {
       successHandler('Город успешно добавлен');
       dispatch('fetchCitiesList');
@@ -115,7 +116,7 @@ export const addCity = ({ commit, dispatch }, name) => {
 
 export const addRestaurant = ({ commit, dispatch }, payload) => {
   commit('SET_LOADING_STATE_ADDING_RESTAURANT', true);
-  axiosInstance.get(`add-restaurant?cityId=${payload.cityId}&restaurantName=${payload.restaurantName}`)
+  axiosInstance.post(`${payload.cityId}/add-restaurant`, { name: payload.restaurantName })
     .then(() => {
       successHandler('Ресторан успешно добавлен');
       dispatch('fetchRestaurantsList');

@@ -28,7 +28,7 @@ export default {
       pagination: {
         sortBy: 'id',
         descending: false,
-        page: 0,
+        page: 1,
         rowsPerPage: 10,
         rowsNumber: 10,
       },
@@ -79,7 +79,7 @@ export default {
       this.pagination = {
         sortBy: 'id',
         descending: false,
-        page: 0,
+        page: 1,
         rowsPerPage: 10,
         rowsNumber: this.rowsNumber,
       };
@@ -101,6 +101,7 @@ export default {
     editItem(id, name) {
       this.$store.dispatch('app/editRestaurant', { id, name })
         .then(() => {
+          console.log(this.pagination);
           this.$store.dispatch('app/fetchRestaurantsList', this.pagination);
           this.filter = '';
         });
