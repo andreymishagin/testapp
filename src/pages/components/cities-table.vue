@@ -16,6 +16,11 @@ export default {
     return {
       confirmRemove: false,
       currentRemovingItemId: null,
+
+      editDialog: false,
+      currentEditingItemId: null,
+      currentEditingItemName: '',
+
       columns: [
         {
           name: 'id',
@@ -52,6 +57,14 @@ export default {
     deleteItem(id) {
       this.$store.dispatch('app/deleteCity', id);
     },
+    openEditDialog(id, name) {
+      this.editDialog = true;
+      this.currentEditingItemId = id;
+      this.currentEditingItemName = name;
+    },
+    editItem(id, name) {
+      this.$store.dispatch('app/editCity', { id, name });
+    },
   },
 };
 </script>
@@ -71,12 +84,14 @@ export default {
           <q-td
             key="id"
             :props="props"
+            style="width: 150px"
           >
             {{ props.row.id }}
           </q-td>
           <q-td
             key="name"
             :props="props"
+            style="width: 300px"
           >
             {{ props.row.name }}
           </q-td>
@@ -89,7 +104,7 @@ export default {
                 flat
                 color="primary"
                 icon="edit"
-                @click="editItem(props.row.id)"
+                @click="openEditDialog(props.row.id, props.row.name)"
               >
                 <q-tooltip>
                   Редактировать
@@ -133,6 +148,36 @@ export default {
             label="Подтверждение"
             color="primary"
             @click="deleteItem(currentRemovingItemId)"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog
+      v-model="editDialog"
+      persistent
+    >
+      <q-card>
+        <q-card-section class="text-center">
+          <q-input
+            v-model="currentEditingItemName"
+            label="Название ресторана"
+          />
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            v-close-popup
+            flat
+            label="Отмена"
+            color="primary"
+          />
+          <q-btn
+            v-close-popup
+            label="Подтверждение"
+            color="primary"
+            :disable="!currentEditingItemName.length"
+            @click="editItem(currentEditingItemId, currentEditingItemName)"
           />
         </q-card-actions>
       </q-card>

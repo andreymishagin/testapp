@@ -1,5 +1,4 @@
 <script>
-import { Notify } from 'quasar';
 
 export default {
   name: 'CitiesPageHeader',
@@ -10,15 +9,6 @@ export default {
   },
   methods: {
     addCity() {
-      if (!this.cityName.length) {
-        Notify.create({
-          color: 'negative',
-          icon: 'thumb_down',
-          message: 'Имя города не может быть пустым',
-          position: 'bottom-right',
-        });
-        return;
-      }
       this.$store.dispatch('app/addCity', this.cityName);
       this.cityName = '';
     },
@@ -40,6 +30,7 @@ export default {
         label="Добавить"
         class="q-ml-sm"
         color="primary"
+        :disable="!cityName.length"
         @click="addCity"
       >
       </q-btn>

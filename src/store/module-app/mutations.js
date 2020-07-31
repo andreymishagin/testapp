@@ -26,8 +26,16 @@ export const SET_LOADING_STATE_DELETING_RESTAURANT = (state, payload) => {
   state.loadingDeletingRestaurant = payload;
 };
 
+export const SET_LOADING_STATE_EDITING_RESTAURANT = (state, payload) => {
+  state.loadingEditingRestaurant = payload;
+};
+
 export const SET_LOADING_STATE_DELETING_CITY = (state, payload) => {
   state.loadingDeletingCity = payload;
+};
+
+export const SET_LOADING_STATE_EDITING_CITY = (state, payload) => {
+  state.loadingEditingCity = payload;
 };
 
 export const SET_LOADING_STATE_ADDING_CITY = (state, payload) => {

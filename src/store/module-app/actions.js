@@ -61,6 +61,16 @@ export const deleteRestaurant = ({ commit, dispatch }, id) => {
     .catch(() => {});
 };
 
+export const editRestaurant = ({ commit }, payload) => {
+  commit('SET_LOADING_STATE_EDITING_RESTAURANT', true);
+  return axiosInstance.get(`edit-restaurant?restaurantId=${payload.id}&newRestaurantName=${payload.name}`)
+    .then(() => {
+      successHandler();
+      commit('SET_LOADING_STATE_EDITING_RESTAURANT', false);
+    })
+    .catch(() => {});
+};
+
 export const deleteCity = ({ commit, dispatch }, id) => {
   commit('SET_LOADING_STATE_DELETING_CITY', true);
   axiosInstance.get(`remove-city?cityId=${id}`)
@@ -68,6 +78,17 @@ export const deleteCity = ({ commit, dispatch }, id) => {
       successHandler();
       dispatch('fetchCitiesList');
       commit('SET_LOADING_STATE_DELETING_CITY', false);
+    })
+    .catch(() => {});
+};
+
+export const editCity = ({ commit, dispatch }, payload) => {
+  commit('SET_LOADING_STATE_EDITING_CITY', true);
+  axiosInstance.get(`edit-city?cityId=${payload.id}&newCityName=${payload.name}`)
+    .then(() => {
+      successHandler();
+      dispatch('fetchCitiesList');
+      commit('SET_LOADING_STATE_EDITING_CITY', false);
     })
     .catch(() => {});
 };

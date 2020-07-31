@@ -21,18 +21,21 @@ export default {
       'loadingRestaurantsList',
       'loadingDeletingRestaurant',
       'loadingAddingRestaurant',
+      'loadingEditingRestaurant',
 
       'citiesList',
       'loadingCitiesList',
       'loadingAddingCity',
       'loadingDeletingCity',
+      'loadingEditingCity',
     ]),
     loadingRestaurants() {
       return this.loadingRestaurantsList || this.loadingDeletingRestaurant
         || this.loadingAddingRestaurant;
     },
     loadingCities() {
-      return this.loadingCitiesList || this.loadingAddingCity || this.loadingDeletingCity;
+      return this.loadingCitiesList || this.loadingAddingCity || this.loadingDeletingCity
+        || this.loadingEditingRestaurant || this.loadingEditingCity;
     },
   },
   methods: {

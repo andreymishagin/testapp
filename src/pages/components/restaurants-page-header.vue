@@ -1,6 +1,5 @@
 <script>
 import { mapState } from 'vuex';
-import { Notify } from 'quasar';
 
 export default {
   name: 'RestaurantsPageHeader',
@@ -29,15 +28,6 @@ export default {
       this.$store.dispatch('app/setCurrentCityId', id);
     },
     addRestaurant() {
-      if (!this.restaurantName.length) {
-        Notify.create({
-          color: 'negative',
-          icon: 'thumb_down',
-          message: 'Имя ресторана не может быть пустым',
-          position: 'bottom-right',
-        });
-        return;
-      }
       this.$store.dispatch('app/addRestaurant', { cityId: this.city.id, restaurantName: this.restaurantName });
       this.restaurantName = '';
     },
@@ -56,6 +46,7 @@ export default {
         label="Город"
         outlined
         :option-label="item => item === null ? '' : item.name"
+        hint="Выберите город"
         @input="setCurrentCityId($event)"
       />
     </div>
@@ -71,6 +62,7 @@ export default {
         label="Добавить"
         class="q-ml-sm"
         color="primary"
+        :disable="!restaurantName.length"
         @click="addRestaurant"
       >
       </q-btn>
