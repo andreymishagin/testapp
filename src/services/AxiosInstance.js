@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Notify } from 'quasar';
 
 export const axiosInstance = axios.create({
-  baseURL: '/api/',
+  baseURL: '/api/rests-and-cities/',
 });
 
 axiosInstance.interceptors.response.use((response) => response, (error) => {

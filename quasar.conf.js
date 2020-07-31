@@ -81,9 +81,8 @@ module.exports = function (/* ctx */) {
       port: 8080,
       proxy: [
         {
-          context: ['/api'],
-          pathRewrite: { '^/api': '' },
-          target: 'http://localhost:8081/',
+          context: ['/api/rests-and-cities'],
+          target: 'http://localhost:5000/',
           secure: false,
         },
       ],
@@ -109,7 +108,9 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: [
+        'Notify',
+      ],
     },
 
     // animations: 'all', // --- includes all animations
