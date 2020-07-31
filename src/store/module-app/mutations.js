@@ -25,3 +25,7 @@ export const SET_LOADING_STATE_DELETING_RESTAURANT = (state, payload) => {
 export const SET_LOADING_STATE_ADDING_CITY = (state, payload) => {
   state.loadingAddingCity = payload;
 };
+
+export const SET_LOADING_STATE_ADDING_RESTAURANT = (state, payload) => {
+  state.loadingAddingRestaurant = payload;
+};

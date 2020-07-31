@@ -1,19 +1,21 @@
 <script>
 import { mapState } from 'vuex';
-import CityFilter from './components/city-filter';
+import PageHeader from './components/page-header';
 import RestaurantsTable from './components/table';
 
 export default {
   name: 'PageIndex',
-  components: { RestaurantsTable, CityFilter },
+  components: { RestaurantsTable, PageHeader },
   computed: {
     ...mapState('app', [
       'restaurantsList',
       'loadingRestaurantsList',
       'loadingDeletingRestaurant',
+      'loadingAddingRestaurant',
     ]),
     loading() {
-      return this.loadingRestaurantsList || this.loadingDeletingRestaurant;
+      return this.loadingRestaurantsList || this.loadingDeletingRestaurant
+        || this.loadingAddingRestaurant;
     },
   },
 };
@@ -21,7 +23,7 @@ export default {
 
 <template>
   <q-page class="q-pa-sm">
-    <city-filter />
+    <page-header />
     <restaurants-table
       :restaurants-list="restaurantsList"
       :loading="loading"

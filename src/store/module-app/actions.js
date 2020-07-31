@@ -54,3 +54,14 @@ export const addCity = ({ commit, dispatch }, name) => {
     })
     .catch(() => {});
 };
+
+export const addRestaurant = ({ commit, dispatch }, payload) => {
+  commit('SET_LOADING_STATE_ADDING_RESTAURANT', true);
+  axiosInstance.get(`add-restaurant?cityId=${payload.cityId}&restaurantName=${payload.restaurantName}`)
+    .then(() => {
+      successHandler('Ресторан успешно добавлен');
+      dispatch('fetchRestaurantsList', payload.cityId);
+      commit('SET_LOADING_STATE_ADDING_RESTAURANT', false);
+    })
+    .catch(() => {});
+};

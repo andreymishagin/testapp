@@ -6,4 +6,5 @@ export default {
   loadingDeletingRestaurant: false,
   loadingAddingCity: false,
   loadingCitiesList: false,
+  loadingAddingRestaurant: false,
 };
