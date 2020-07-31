@@ -1,26 +1,34 @@
-# Quasar App (frontend)
+## Приложение запуска заданий (TaskManager) с функцией динамической балансировки.
 
+### Настройка окружения
+Для корректной работы приложения необходимо наличие следующих установленных компонентов:
+* Node.js
 
+### Установить quasar CLI
+```bash
+npm install -g @quasar/cli
+```
 
-## Install the dependencies
+### Установка и запуск приложения
+Перейти в корневой каталог с проектом и выполнить:
 ```bash
 npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
 quasar dev
 ```
-
-### Lint the files
-```bash
-npm run lint
-```
-
-### Build the app for production
+### Выполнить билд приложения
 ```bash
 quasar build
 ```
+### Выполнить билд приложения
+Изменить адрес backend'а и порт запуска можно в файле quasar.conf.js
+```bash
+devServer: {
+  port: 8080,
+  proxy: [
+    {
+      target: 'http://localhost:8081/',
+    }
+  ]
+},
+```
 
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
