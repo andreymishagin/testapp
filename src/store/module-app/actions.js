@@ -41,7 +41,7 @@ export const setCurrentCityId = ({ commit, dispatch }, id) => {
 
 export const fetchCitiesList = ({ commit }) => {
   commit('SET_LOADING_STATE_FETCHING_CITIES_LIST', true);
-  axiosInstance.get('get-cities-list')
+  return axiosInstance.get('get-cities-list')
     .then((response) => {
       const { data } = response;
       commit('SET_CITIES_LIST', data);

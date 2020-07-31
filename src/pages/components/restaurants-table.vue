@@ -18,6 +18,9 @@ export default {
       confirmRemove: false,
       editDialog: false,
 
+      addDialog: false,
+      restaurantName: '',
+
       currentRemovingItemId: null,
       currentEditingItemId: null,
       currentEditingItemName: '',
@@ -61,6 +64,7 @@ export default {
     ...mapState('app', [
       'rowsNumber',
       'currentCityId',
+      'citiesList',
     ]),
   },
   watch: {
@@ -99,6 +103,13 @@ export default {
           this.$store.dispatch('app/fetchRestaurantsList', this.pagination);
         });
     },
+    openAddDialog() {
+      this.addDialog = true;
+    },
+    addRestaurant() {
+      this.$store.dispatch('app/addRestaurant', { cityId: this.currentCityId, restaurantName: this.restaurantName });
+      this.restaurantName = '';
+    },
     onRequest(props) {
       const { pagination } = props;
       this.$store.dispatch('app/fetchRestaurantsList', pagination);
@@ -121,6 +132,21 @@ export default {
       @request="onRequest"
       binary-state-sort
     >
+      <template
+        v-slot:top
+      >
+        <div class="text-h6">Рестораны</div>
+        <q-space />
+        <q-btn
+          color="primary"
+          icon="add"
+          @click="openAddDialog()"
+        >
+          <q-tooltip>
+            Добавить ресторан
+          </q-tooltip>
+        </q-btn>
+      </template>
       <template v-slot:body="props">
         <q-tr
           :props="props"
@@ -169,27 +195,49 @@ export default {
         </q-tr>
       </template>
     </q-table>
+    <div
+      v-else-if="!restaurantsList.length && !loading && !citiesList.length"
+      class="flex flex-center fit"
+    >
+        <h6 style="text-align: center">
+          В списке ресторанов нет ни одной записи т.к.
+          отсутствуют доступные для выбора города. <br />
+          Пожалуйста перейдите во вкладку "Города" и добавьте хотя бы один город.
+        </h6>
+    </div>
 
     <q-dialog
       v-model="confirmRemove"
       persistent
     >
       <q-card>
-        <q-card-section class="text-center">
-          Подтвердите удаление
+        <q-card-section class="text-h6 text-weight-light text-uppercase">
+          Удаление ресторана
         </q-card-section>
+
+        <q-separator />
+
+        <q-card-section class="text-center">
+          Вы уверены, что хотите удалить ресторан?
+          <q-icon
+            name="warning"
+            size="sm"
+            color="primary"
+          />
+        </q-card-section>
+
+        <q-separator />
 
         <q-card-actions align="right">
           <q-btn
             v-close-popup
             flat
-            label="Отмена"
+            label="Нет"
             color="primary"
           />
           <q-btn
             v-close-popup
-            flat
-            label="Подтверждение"
+            label="Да"
             color="primary"
             @click="deleteItem(currentRemovingItemId)"
           />
@@ -202,6 +250,12 @@ export default {
       persistent
     >
       <q-card>
+        <q-card-section class="text-h6 text-weight-light text-uppercase">
+          Редактирование ресторана
+        </q-card-section>
+
+        <q-separator />
+
         <q-card-section class="text-center">
           <q-input
             v-model="currentEditingItemName"
@@ -218,10 +272,46 @@ export default {
           />
           <q-btn
             v-close-popup
-            label="Подтверждение"
+            label="Сохранить"
             color="primary"
             :disable="!currentEditingItemName.length"
             @click="editItem(currentEditingItemId, currentEditingItemName)"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog
+      v-model="addDialog"
+      persistent
+    >
+      <q-card>
+        <q-card-section class="text-h6 text-weight-light text-uppercase">
+          Добавить ресторан
+        </q-card-section>
+
+        <q-separator />
+        <q-card-section class="text-center">
+          <q-input
+            v-model="restaurantName"
+            style="width: 300px"
+            label="Название ресторана"
+          />
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            v-close-popup
+            flat
+            label="Отмена"
+            color="primary"
+          />
+          <q-btn
+            v-close-popup
+            label="Добавить"
+            color="primary"
+            :disable="!restaurantName.length"
+            @click="addRestaurant"
           />
         </q-card-actions>
       </q-card>

@@ -17,6 +17,9 @@ export default {
       confirmRemove: false,
       currentRemovingItemId: null,
 
+      addDialog: false,
+      cityName: '',
+
       editDialog: false,
       currentEditingItemId: null,
       currentEditingItemName: '',
@@ -65,18 +68,44 @@ export default {
     editItem(id, name) {
       this.$store.dispatch('app/editCity', { id, name });
     },
+    openAddDialog() {
+      this.addDialog = true;
+    },
+    addCity() {
+      this.$store.dispatch('app/addCity', this.cityName);
+      this.cityName = '';
+    },
   },
 };
 </script>
 
 <template>
   <div class="q-mt-md">
+    <div v-if="!citiesList.length && !loading" class="flex flex-center fit">
+      <h6 style="text-align: center">
+        В списке городов нет ни одной записи. Пожалуйста добавьте хотя бы один город.
+      </h6>
+    </div>
     <q-table
-      title="Города"
       :data="citiesList"
       :columns="columns"
       :loading="loading"
     >
+      <template
+        v-slot:top
+      >
+        <div class="text-h6">Города</div>
+        <q-space />
+        <q-btn
+          color="primary"
+          icon="add"
+          @click="openAddDialog()"
+        >
+          <q-tooltip>
+            Добавить город
+          </q-tooltip>
+        </q-btn>
+      </template>
       <template v-slot:body="props">
         <q-tr
           :props="props"
@@ -131,21 +160,33 @@ export default {
       persistent
     >
       <q-card>
-        <q-card-section class="text-center">
-          Подтвердите удаление
+        <q-card-section class="text-h6 text-weight-light text-uppercase">
+          Удаление города
         </q-card-section>
+
+        <q-separator />
+
+        <q-card-section class="text-center">
+          При удалении города - удаляются все рестораны
+          <q-icon
+            name="warning"
+            size="sm"
+            color="primary"
+          />
+        </q-card-section>
+
+        <q-separator />
 
         <q-card-actions align="right">
           <q-btn
             v-close-popup
             flat
-            label="Отмена"
+            label="Нет"
             color="primary"
           />
           <q-btn
             v-close-popup
-            flat
-            label="Подтверждение"
+            label="Да"
             color="primary"
             @click="deleteItem(currentRemovingItemId)"
           />
@@ -158,6 +199,12 @@ export default {
       persistent
     >
       <q-card>
+        <q-card-section class="text-h6 text-weight-light text-uppercase">
+          Редактирование города
+        </q-card-section>
+
+        <q-separator />
+
         <q-card-section class="text-center">
           <q-input
             v-model="currentEditingItemName"
@@ -174,10 +221,46 @@ export default {
           />
           <q-btn
             v-close-popup
-            label="Подтверждение"
+            label="Сохранить"
             color="primary"
             :disable="!currentEditingItemName.length"
             @click="editItem(currentEditingItemId, currentEditingItemName)"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog
+      v-model="addDialog"
+      persistent
+    >
+      <q-card>
+        <q-card-section class="text-h6 text-weight-light text-uppercase">
+          Добавить город
+        </q-card-section>
+
+        <q-separator />
+        <q-card-section class="text-center">
+          <q-input
+            v-model="cityName"
+            style="width: 300px"
+            label="Название города"
+          />
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            v-close-popup
+            flat
+            label="Отмена"
+            color="primary"
+          />
+          <q-btn
+            v-close-popup
+            label="Добавить"
+            color="primary"
+            :disable="!cityName.length"
+            @click="addCity"
           />
         </q-card-actions>
       </q-card>

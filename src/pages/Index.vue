@@ -3,12 +3,11 @@ import { mapState } from 'vuex';
 import RestaurantsPageHeader from './components/restaurants-page-header';
 import RestaurantsTable from './components/restaurants-table';
 import CitiesTable from './components/cities-table';
-import CitiesPageHeader from './components/cities-page-header';
 
 export default {
   name: 'PageIndex',
   components: {
-    CitiesPageHeader, CitiesTable, RestaurantsTable, RestaurantsPageHeader,
+    CitiesTable, RestaurantsTable, RestaurantsPageHeader,
   },
   data() {
     return {
@@ -55,7 +54,6 @@ export default {
       active-color="primary"
       indicator-color="primary"
       align="justify"
-      narrow-indicator
     >
       <q-tab name="restaurants" label="Рестораны" />
       <q-tab name="cities" label="Города" />
@@ -71,7 +69,6 @@ export default {
       </q-tab-panel>
 
       <q-tab-panel name="cities">
-        <cities-page-header />
         <cities-table
           :cities-list="citiesList"
           :loading="loadingCities"

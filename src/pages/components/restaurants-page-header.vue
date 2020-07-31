@@ -6,7 +6,6 @@ export default {
   data() {
     return {
       city: null,
-      restaurantName: '',
     };
   },
   computed: {
@@ -20,16 +19,18 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('app/fetchCitiesList');
+    this.$store.dispatch('app/fetchCitiesList')
+      .then(() => {
+        if (!this.citiesList.length) return;
+        // eslint-disable-next-line prefer-destructuring
+        this.city = this.citiesList[0];
+        this.$store.dispatch('app/setCurrentCityId', this.city.id);
+      });
   },
   methods: {
     setCurrentCityId(city) {
       const { id } = city;
       this.$store.dispatch('app/setCurrentCityId', id);
-    },
-    addRestaurant() {
-      this.$store.dispatch('app/addRestaurant', { cityId: this.city.id, restaurantName: this.restaurantName });
-      this.restaurantName = '';
     },
   },
 };
@@ -46,26 +47,8 @@ export default {
         label="Город"
         outlined
         :option-label="item => item === null ? '' : item.name"
-        hint="Выберите город"
         @input="setCurrentCityId($event)"
       />
-    </div>
-    <div v-if="city" class="q-mt-md flex row no-wrap">
-      <q-input
-        v-model="restaurantName"
-        style="width: 300px"
-        clearable
-        outlined
-        placeholder="Название ресторана"
-      />
-      <q-btn
-        label="Добавить"
-        class="q-ml-sm"
-        color="primary"
-        :disable="!restaurantName.length"
-        @click="addRestaurant"
-      >
-      </q-btn>
     </div>
   </div>
 </template>
