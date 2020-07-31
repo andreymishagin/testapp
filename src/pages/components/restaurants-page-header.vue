@@ -3,11 +3,10 @@ import { mapState } from 'vuex';
 import { Notify } from 'quasar';
 
 export default {
-  name: 'PageHeader',
+  name: 'RestaurantsPageHeader',
   data() {
     return {
       city: null,
-      cityName: '',
       restaurantName: '',
     };
   },
@@ -28,19 +27,6 @@ export default {
     setCurrentCityId(city) {
       const { id } = city;
       this.$store.dispatch('app/setCurrentCityId', id);
-    },
-    addCity() {
-      if (!this.cityName.length) {
-        Notify.create({
-          color: 'negative',
-          icon: 'thumb_down',
-          message: 'Имя города не может быть пустым',
-          position: 'bottom-right',
-        });
-        return;
-      }
-      this.$store.dispatch('app/addCity', this.cityName);
-      this.cityName = '';
     },
     addRestaurant() {
       if (!this.restaurantName.length) {
@@ -72,21 +58,6 @@ export default {
         :option-label="item => item === null ? '' : item.name"
         @input="setCurrentCityId($event)"
       />
-      <q-space />
-      <q-input
-        v-model="cityName"
-        style="width: 300px"
-        clearable
-        outlined
-        placeholder="Название города"
-      />
-      <q-btn
-        label="Добавить"
-        class="q-ml-sm"
-        color="primary"
-        @click="addCity"
-      >
-      </q-btn>
     </div>
     <div v-if="city" class="q-mt-md flex row no-wrap">
       <q-input

@@ -23,7 +23,6 @@ export const fetchRestaurantsList = ({ commit, state }, payload = {
     page: payload.page - 1,
     size: payload.rowsPerPage,
   };
-  // const params = { ...payload, cityId: state.currentCityId };
   commit('SET_LOADING_STATE_FETCHING_RESTAURANTS_LIST', true);
   axiosInstance.post('get-restaurants-list', params)
     .then((response) => {
@@ -58,6 +57,17 @@ export const deleteRestaurant = ({ commit, dispatch }, id) => {
       successHandler();
       dispatch('fetchRestaurantsList');
       commit('SET_LOADING_STATE_DELETING_RESTAURANT', false);
+    })
+    .catch(() => {});
+};
+
+export const deleteCity = ({ commit, dispatch }, id) => {
+  commit('SET_LOADING_STATE_DELETING_CITY', true);
+  axiosInstance.get(`remove-city?cityId=${id}`)
+    .then(() => {
+      successHandler();
+      dispatch('fetchCitiesList');
+      commit('SET_LOADING_STATE_DELETING_CITY', false);
     })
     .catch(() => {});
 };

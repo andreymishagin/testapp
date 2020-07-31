@@ -5,6 +5,7 @@ export default {
   rowsNumber: 10,
   loadingRestaurantsList: false,
   loadingDeletingRestaurant: false,
+  loadingDeletingCity: false,
   loadingAddingCity: false,
   loadingCitiesList: false,
   loadingAddingRestaurant: false,
