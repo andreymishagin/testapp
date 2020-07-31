@@ -67,6 +67,9 @@ export default {
       'currentCityId',
       'citiesList',
     ]),
+    dontHide() {
+      return !!this.filter.length || this.filter === '';
+    },
   },
   watch: {
     restaurantsList() {
@@ -123,7 +126,7 @@ export default {
 <template>
   <div class="q-mt-md">
     <q-table
-      v-if="restaurantsList.length"
+      v-if="restaurantsList.length || dontHide"
       title="Рестораны"
       :data="restaurantsList"
       :columns="columns"
