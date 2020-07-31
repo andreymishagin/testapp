@@ -10,16 +10,34 @@ export const successHandler = (message) => {
   });
 };
 
-export const fetchRestaurantsList = ({ commit }, id) => {
+export const fetchRestaurantsList = ({ commit, state }, payload = {
+  sortBy: 'id',
+  descending: false,
+  page: 1,
+  rowsPerPage: 10,
+}) => {
+  const params = {
+    cityId: state.currentCityId,
+    sortBy: payload.sortBy,
+    descending: payload.descending,
+    page: payload.page - 1,
+    size: payload.rowsPerPage,
+  };
+  // const params = { ...payload, cityId: state.currentCityId };
   commit('SET_LOADING_STATE_FETCHING_RESTAURANTS_LIST', true);
-  commit('SET_CURRENT_CITY_ID', id);
-  axiosInstance.get(`get-restaurants-list?cityId=${id}`)
+  axiosInstance.post('get-restaurants-list', params)
     .then((response) => {
       const { data } = response;
-      commit('SET_RESTAURANTS_LIST', data);
+      commit('SET_RESTAURANTS_LIST', data.rows);
+      commit('SET_ROWS_NUMBER', data.rowsNumber);
       commit('SET_LOADING_STATE_FETCHING_RESTAURANTS_LIST', false);
     })
     .catch(() => {});
+};
+
+export const setCurrentCityId = ({ commit, dispatch }, id) => {
+  commit('SET_CURRENT_CITY_ID', id);
+  dispatch('fetchRestaurantsList');
 };
 
 export const fetchCitiesList = ({ commit }) => {
@@ -33,12 +51,12 @@ export const fetchCitiesList = ({ commit }) => {
     .catch(() => {});
 };
 
-export const deleteRestaurant = ({ commit, dispatch, state }, id) => {
+export const deleteRestaurant = ({ commit, dispatch }, id) => {
   commit('SET_LOADING_STATE_DELETING_RESTAURANT', true);
   axiosInstance.get(`remove-restaurant?restaurantId=${id}`)
     .then(() => {
       successHandler();
-      dispatch('fetchRestaurantsList', state.currentCityId);
+      dispatch('fetchRestaurantsList');
       commit('SET_LOADING_STATE_DELETING_RESTAURANT', false);
     })
     .catch(() => {});
@@ -60,7 +78,7 @@ export const addRestaurant = ({ commit, dispatch }, payload) => {
   axiosInstance.get(`add-restaurant?cityId=${payload.cityId}&restaurantName=${payload.restaurantName}`)
     .then(() => {
       successHandler('Ресторан успешно добавлен');
-      dispatch('fetchRestaurantsList', payload.cityId);
+      dispatch('fetchRestaurantsList');
       commit('SET_LOADING_STATE_ADDING_RESTAURANT', false);
     })
     .catch(() => {});

@@ -25,9 +25,9 @@ export default {
     this.$store.dispatch('app/fetchCitiesList');
   },
   methods: {
-    fetchRestaurantsList(city) {
+    setCurrentCityId(city) {
       const { id } = city;
-      this.$store.dispatch('app/fetchRestaurantsList', id);
+      this.$store.dispatch('app/setCurrentCityId', id);
     },
     addCity() {
       if (!this.cityName.length) {
@@ -70,7 +70,7 @@ export default {
         label="Город"
         outlined
         :option-label="item => item === null ? '' : item.name"
-        @input="fetchRestaurantsList($event)"
+        @input="setCurrentCityId($event)"
       />
       <q-space />
       <q-input

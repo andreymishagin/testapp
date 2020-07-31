@@ -10,6 +10,10 @@ export const SET_CURRENT_CITY_ID = (state, payload) => {
   state.currentCityId = payload;
 };
 
+export const SET_ROWS_NUMBER = (state, payload) => {
+  state.rowsNumber = payload;
+};
+
 export const SET_LOADING_STATE_FETCHING_RESTAURANTS_LIST = (state, payload) => {
   state.loadingRestaurantsList = payload;
 };

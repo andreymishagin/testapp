@@ -1,4 +1,6 @@
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'RestaurantsTable',
   props: {
@@ -15,6 +17,13 @@ export default {
     return {
       confirmRemove: false,
       currentRemovingItemId: null,
+      pagination: {
+        sortBy: 'id',
+        descending: false,
+        page: 0,
+        rowsPerPage: 10,
+        rowsNumber: 10,
+      },
       columns: [
         {
           name: 'id',
@@ -43,6 +52,29 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState('app', [
+      'rowsNumber',
+      'currentCityId',
+    ]),
+  },
+  watch: {
+    restaurantsList() {
+      this.pagination = {
+        ...this.pagination,
+        rowsNumber: this.rowsNumber,
+      };
+    },
+    currentCityId() {
+      this.pagination = {
+        sortBy: 'id',
+        descending: false,
+        page: 0,
+        rowsPerPage: 10,
+        rowsNumber: this.rowsNumber,
+      };
+    },
+  },
   methods: {
     openConfirmDialog(id) {
       this.confirmRemove = true;
@@ -50,6 +82,11 @@ export default {
     },
     deleteItem(id) {
       this.$store.dispatch('app/deleteRestaurant', id);
+    },
+    onRequest(props) {
+      const { pagination } = props;
+      this.$store.dispatch('app/fetchRestaurantsList', pagination);
+      this.pagination = { ...pagination };
     },
   },
 };
@@ -62,6 +99,10 @@ export default {
       :data="restaurantsList"
       :columns="columns"
       :loading="loading"
+      row-key="id"
+      :pagination.sync="pagination"
+      @request="onRequest"
+      binary-state-sort
     >
       <template v-slot:body="props">
         <q-tr
