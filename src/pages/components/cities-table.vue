@@ -81,11 +81,6 @@ export default {
 
 <template>
   <div class="q-mt-md">
-    <div v-if="!citiesList.length && !loading" class="flex flex-center fit">
-      <h6 style="text-align: center">
-        В списке городов нет ни одной записи. Пожалуйста добавьте хотя бы один город.
-      </h6>
-    </div>
     <q-table
       :data="citiesList"
       :columns="columns"
@@ -106,6 +101,20 @@ export default {
           </q-tooltip>
         </q-btn>
       </template>
+
+      <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            style="font-size: 16px"
+          >
+            {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
+
       <template v-slot:body="props">
         <q-tr
           :props="props"
@@ -152,6 +161,19 @@ export default {
             </div>
           </q-td>
         </q-tr>
+      </template>
+      <template
+        v-if="!citiesList.length"
+        v-slot:no-data
+      >
+        <q-icon
+          name="warning"
+          size="sm"
+          color="primary"
+        />
+        <div style="font-size: 16px" class="q-ml-lg text-bold">
+          В списке городов нет ни одной записи. Пожалуйста добавьте хотя бы один город.
+        </div>
       </template>
     </q-table>
 

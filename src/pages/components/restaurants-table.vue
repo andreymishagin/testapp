@@ -67,9 +67,6 @@ export default {
       'currentCityId',
       'citiesList',
     ]),
-    dontHide() {
-      return !!this.filter.length || this.filter === '';
-    },
   },
   watch: {
     restaurantsList() {
@@ -105,6 +102,7 @@ export default {
       this.$store.dispatch('app/editRestaurant', { id, name })
         .then(() => {
           this.$store.dispatch('app/fetchRestaurantsList', this.pagination);
+          this.filter = '';
         });
     },
     openAddDialog() {
@@ -113,6 +111,7 @@ export default {
     addRestaurant() {
       this.$store.dispatch('app/addRestaurant', { cityId: this.currentCityId, restaurantName: this.restaurantName });
       this.restaurantName = '';
+      this.filter = '';
     },
     onRequest(props) {
       const { pagination, filter } = props;
@@ -126,7 +125,6 @@ export default {
 <template>
   <div class="q-mt-md">
     <q-table
-      v-if="restaurantsList.length || dontHide"
       title="Рестораны"
       :data="restaurantsList"
       :columns="columns"
@@ -138,6 +136,7 @@ export default {
       binary-state-sort
     >
       <template
+        v-if="citiesList.length"
         v-slot:top
       >
         <div class="text-h6">Рестораны</div>
@@ -164,6 +163,20 @@ export default {
           </q-tooltip>
         </q-btn>
       </template>
+
+      <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            style="font-size: 16px"
+          >
+            {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
+
       <template v-slot:body="props">
         <q-tr
           :props="props"
@@ -211,17 +224,22 @@ export default {
           </q-td>
         </q-tr>
       </template>
-    </q-table>
-    <div
-      v-else-if="!restaurantsList.length && !loading && !citiesList.length"
-      class="flex flex-center fit"
-    >
-        <h6 style="text-align: center">
+      <template
+        v-if="!citiesList.length"
+        v-slot:no-data
+      >
+        <q-icon
+          name="warning"
+          size="sm"
+          color="primary"
+        />
+        <div style="font-size: 16px" class="q-ml-lg text-bold">
           В списке ресторанов нет ни одной записи т.к.
           отсутствуют доступные для выбора города. <br />
           Пожалуйста перейдите во вкладку "Города" и добавьте хотя бы один город.
-        </h6>
-    </div>
+        </div>
+      </template>
+    </q-table>
 
     <q-dialog
       v-model="confirmRemove"

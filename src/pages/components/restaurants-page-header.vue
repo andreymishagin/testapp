@@ -41,6 +41,7 @@ export default {
     <div class="q-mt-md flex row no-wrap">
       <q-select
         v-model="city"
+        v-if="citiesList.length"
         :options="citiesList"
         :loading="loading"
         style="width: 300px"

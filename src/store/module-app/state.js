@@ -3,11 +3,11 @@ export default {
   citiesList: [],
   currentCityId: null,
   rowsNumber: 10,
-  loadingRestaurantsList: true,
+  loadingRestaurantsList: false,
   loadingDeletingRestaurant: false,
   loadingDeletingCity: false,
   loadingEditingCity: false,
   loadingAddingCity: false,
-  loadingCitiesList: true,
+  loadingCitiesList: false,
   loadingAddingRestaurant: false,
 };

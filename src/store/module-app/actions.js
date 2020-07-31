@@ -6,7 +6,7 @@ export const successHandler = (message) => {
     color: 'positive',
     icon: 'thumb_up',
     message: message || 'Успешно',
-    position: 'bottom-right',
+    position: 'bottom-left',
   });
 };
 
@@ -32,7 +32,15 @@ export const fetchRestaurantsList = ({ commit, state }, payload = {
       commit('SET_ROWS_NUMBER', data.rowsNumber);
       commit('SET_LOADING_STATE_FETCHING_RESTAURANTS_LIST', false);
     })
-    .catch(() => {});
+    .catch(() => {
+      Notify.create({
+        color: 'positive',
+        icon: 'thumb_up',
+        message: 'Таблица пустая, сортировать нечего :)',
+        position: 'bottom-left',
+      });
+      commit('SET_LOADING_STATE_FETCHING_RESTAURANTS_LIST', false);
+    });
 };
 
 export const setCurrentCityId = ({ commit, dispatch }, id) => {
