@@ -22,6 +22,7 @@ export const fetchRestaurantsList = ({ commit, state }, payload = {
     descending: payload.descending,
     page: payload.page - 1,
     size: payload.rowsPerPage,
+    filter: payload.filter,
   };
   commit('SET_LOADING_STATE_FETCHING_RESTAURANTS_LIST', true);
   axiosInstance.post('get-restaurants-list', params)

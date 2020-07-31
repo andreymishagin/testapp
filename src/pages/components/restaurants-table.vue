@@ -32,6 +32,7 @@ export default {
         rowsPerPage: 10,
         rowsNumber: 10,
       },
+      filter: '',
       columns: [
         {
           name: 'id',
@@ -111,8 +112,8 @@ export default {
       this.restaurantName = '';
     },
     onRequest(props) {
-      const { pagination } = props;
-      this.$store.dispatch('app/fetchRestaurantsList', pagination);
+      const { pagination, filter } = props;
+      this.$store.dispatch('app/fetchRestaurantsList', { ...pagination, filter });
       this.pagination = { ...pagination };
     },
   },
@@ -129,6 +130,7 @@ export default {
       :loading="loading"
       row-key="id"
       :pagination.sync="pagination"
+      :filter="filter"
       @request="onRequest"
       binary-state-sort
     >
@@ -137,6 +139,18 @@ export default {
       >
         <div class="text-h6">Рестораны</div>
         <q-space />
+        <q-input
+          class="q-mr-md"
+          borderless
+          dense
+          debounce="300"
+          v-model="filter"
+          placeholder="Название ресторана"
+        >
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
         <q-btn
           color="primary"
           icon="add"
